@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">WeatherCompose</string>
+    <string name="app_name" translatable="false">WeatherCompose</string>
+    <string-array name="tab_list">
+        <item>HOURS</item>
+        <item>DAYS</item>
+    </string-array>
 </resources>
