@@ -1,5 +1,6 @@
 package com.example.weathercompose.activity
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,6 +12,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -20,15 +22,18 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.weathercompose.model.actvity.Weather
+import com.example.weathercompose.model.actvity.WeatherUI
 import com.example.weathercompose.ui.theme.lightBlue
 
 @Composable
-fun ListItem(item: Weather) {
+fun ListItem(item: WeatherUI, currentDay: MutableState<WeatherUI>) {
     val offset = Offset(1.0f, 2.0f)
     Card (
         modifier = Modifier.fillMaxWidth()
-            .padding(top = 3.dp),
+            .padding(top = 3.dp).clickable{
+                if (item.hours.isEmpty()) return@clickable
+                currentDay.value = item
+            },
         colors = CardDefaults.cardColors(containerColor = lightBlue),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
         shape = RoundedCornerShape(5.dp)
@@ -63,7 +68,13 @@ fun ListItem(item: Weather) {
             }
             Text(
                 modifier = Modifier.padding(top = 5.dp).weight(0.25f),
-                text = item.currentTemp.ifEmpty {"${item.minTemp}/${item.maxTemp}"},
+                text = if (item.currentTemp.isEmpty())
+                            if (item.minTemp.isEmpty() || item.maxTemp.isEmpty())
+                                ""
+                            else
+                                {"${item.minTemp}/${item.maxTemp}"}
+                        else
+                            item.currentTemp,
                 color = Color.White,
                 style = TextStyle(
                     fontSize = 25.sp,

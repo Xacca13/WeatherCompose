@@ -1,6 +1,6 @@
 package com.example.weathercompose.model.actvity
 
-data class Weather(
+data class WeatherUI(
     val city: String,
     val time: String,
     val condition: String,
@@ -8,5 +8,5 @@ data class Weather(
     val minTemp: String,
     val maxTemp: String,
     val iconLink: String,
-    val hours: List<Weather>
+    val hours: List<WeatherUI>
 )

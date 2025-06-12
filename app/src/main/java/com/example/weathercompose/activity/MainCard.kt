@@ -37,14 +37,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.weathercompose.R
-import com.example.weathercompose.model.actvity.Weather
-import com.example.weathercompose.service.WeatherService
+import com.example.weathercompose.model.actvity.WeatherUI
 import com.example.weathercompose.ui.theme.lightBlue
 import kotlinx.coroutines.launch
 
 @Composable
-fun MainCard(daysList: MutableState<List<Weather>>) {
-    val service = WeatherService()
+fun MainCard(currentDay: MutableState<WeatherUI>, clickButton: () -> Unit, dialogSearchState: MutableState<Boolean>) {
     val offset = Offset(1.0f, 2.0f)
     Column(
         modifier = Modifier
@@ -66,7 +64,7 @@ fun MainCard(daysList: MutableState<List<Weather>>) {
                 ) {
                     Text(
                         modifier = Modifier.padding(top = 15.dp, start = 5.dp),
-                        text = daysList.value[0].time.replace(" ","\n"),
+                        text = currentDay.value.time.replace(" ","\n"),
                         style = TextStyle(
                             fontSize = 15.sp,
                             shadow = Shadow(
@@ -75,7 +73,7 @@ fun MainCard(daysList: MutableState<List<Weather>>) {
                         color = Color.White
                     )
                     AsyncImage(
-                        model = daysList.value[0].iconLink,
+                        model = currentDay.value.iconLink,
                         contentDescription = "weatherIcon",
                         modifier = Modifier
                             .padding(end = 10.dp)
@@ -83,7 +81,7 @@ fun MainCard(daysList: MutableState<List<Weather>>) {
                     )
                 }
                 Text(
-                    text = daysList.value[0].city,
+                    text = currentDay.value.city,
                     style = TextStyle(
                         fontSize = 25.sp,
                         shadow = Shadow(
@@ -93,7 +91,12 @@ fun MainCard(daysList: MutableState<List<Weather>>) {
                 )
                 Text(
                     modifier = Modifier.padding(top = 5.dp),
-                    text = daysList.value[0].currentTemp,
+                    text = if (currentDay.value.currentTemp.isEmpty())
+                            if (currentDay.value.minTemp.isEmpty() || currentDay.value.maxTemp.isEmpty())
+                                ""
+                            else
+                                "${currentDay.value.minTemp}/${currentDay.value.maxTemp}"
+                        else currentDay.value.currentTemp,
                     style = TextStyle(
                         fontSize = 50.sp,
                         shadow = Shadow(
@@ -103,7 +106,7 @@ fun MainCard(daysList: MutableState<List<Weather>>) {
                 )
                 Text(
                     modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
-                    text = daysList.value[0].condition,
+                    text = currentDay.value.condition,
                     style = TextStyle(
                         fontSize = 18.sp,
                         shadow = Shadow(
@@ -117,7 +120,7 @@ fun MainCard(daysList: MutableState<List<Weather>>) {
                 ) {
                     IconButton(
                         onClick = {
-
+                            dialogSearchState.value = true
                         }
                     ) {
                         Icon(
@@ -128,7 +131,10 @@ fun MainCard(daysList: MutableState<List<Weather>>) {
                     }
                     Text(
                         modifier = Modifier.padding(top = 5.dp),
-                        text = "${daysList.value[0].minTemp}/${daysList.value[0].maxTemp}",
+                        text = if (currentDay.value.currentTemp.isNotEmpty())
+                            if (currentDay.value.minTemp.isNotEmpty() || currentDay.value.maxTemp.isNotEmpty())  "${currentDay.value.minTemp}/${currentDay.value.maxTemp}"
+                            else ""
+                        else "",
                         style = TextStyle(
                             fontSize = 22.sp,
                             shadow = Shadow(
@@ -138,7 +144,7 @@ fun MainCard(daysList: MutableState<List<Weather>>) {
                     )
                     IconButton(
                         onClick = {
-
+                            clickButton.invoke()
                         }
                     ) {
                         Icon(
@@ -155,7 +161,7 @@ fun MainCard(daysList: MutableState<List<Weather>>) {
 }
 
 @Composable
-fun TabLayout(daysList: MutableState<List<Weather>>) {
+fun TabLayout(daysList: MutableState<List<WeatherUI>>, currentDay: MutableState<WeatherUI>) {
     val tabList = stringArrayResource(R.array.tab_list)
     val pagerState = rememberPagerState { tabList.size }
     val tabIndex = pagerState.currentPage
@@ -200,21 +206,26 @@ fun TabLayout(daysList: MutableState<List<Weather>>) {
             state = pagerState,
             modifier = Modifier.weight(1.0f)
         ) { index ->
+            val list = when(index) {
+                0 -> currentDay.value.hours
+                1 -> daysList.value
+                else -> daysList.value
+            }
             LazyColumn (
                 modifier = Modifier.fillMaxSize()
             ) {
                 itemsIndexed(
-                    if (daysList.value.size > 0)
-                    if (tabIndex == 0) daysList.value[0].hours else daysList.value.subList(1,daysList.value.size)
-                    else daysList.value
+                    list
                 ) { index, item ->
-                    ListItem(item)
+                    ListItem(item, currentDay)
                 }
             }
         }
 
     }
 }
+
+
 
 
 //private fun getWeatherDataRetrofit(city: String) {

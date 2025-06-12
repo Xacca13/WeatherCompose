@@ -4,4 +4,7 @@
         <item>HOURS</item>
         <item>DAYS</item>
     </string-array>
+    <string name="dialog_search_ok" translatable="false">OK</string>
+    <string name="dialog_search_cancel">Cancel</string>
+    <string name="dialog_search_input_row">enter the city name</string>
 </resources>

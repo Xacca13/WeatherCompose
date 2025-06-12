@@ -5,4 +5,6 @@
     <item>Прогноз на день</item>
     <item>Прогноз по дням</item>
 </string-array>
+    <string name="dialog_search_cancel">Отмена</string>
+    <string name="dialog_search_input_row">введите название города</string>
 </resources>

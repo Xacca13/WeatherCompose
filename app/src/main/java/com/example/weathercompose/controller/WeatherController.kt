@@ -1,6 +1,6 @@
 package com.example.weathercompose.controller
 
-import com.example.weathercompose.dao.IWeather
+import com.example.weathercompose.repository.IWeather
 import com.example.weathercompose.model.weather.Weather
 
 class WeatherController : IWeather {
@@ -13,7 +13,7 @@ class WeatherController : IWeather {
         aqi: String,
         alerts: String
     ): Weather {
-        return controller.getForecast(key, q, days, aqi, alerts)
+        return controller.getForecast(key, q, days)
     }
 
     override suspend fun getCurrent(
@@ -21,7 +21,7 @@ class WeatherController : IWeather {
         q: String,
         aqi: String
     ): Weather {
-        return controller.getCurrent(key, q, aqi)
+        return controller.getCurrent(key, q)
     }
 
 }

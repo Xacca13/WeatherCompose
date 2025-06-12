@@ -1,4 +1,4 @@
-package com.example.weathercompose.dao
+package com.example.weathercompose.repository
 
 import com.example.weathercompose.model.weather.Weather
 import retrofit2.http.GET
@@ -10,12 +10,12 @@ interface IWeather {
     suspend fun getForecast(@Query("key") key: String,
                             @Query("q") q: String,
                             @Query("days") days: String,
-                            @Query("aqi") aqi: String,
-                            @Query("alerts") alerts: String): Weather
+                            @Query("aqi") aqi: String = "no",
+                            @Query("alerts") alerts: String = "no"): Weather
 
     @GET("current.json")
     suspend fun getCurrent(@Query("key") key: String,
                             @Query("q") q: String,
-                            @Query("aqi") aqi: String): Weather
+                            @Query("aqi") aqi: String = "no"): Weather
 
 }
