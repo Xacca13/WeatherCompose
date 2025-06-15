@@ -224,26 +224,3 @@ fun TabLayout(daysList: MutableState<List<WeatherUI>>, currentDay: MutableState<
 
     }
 }
-
-
-
-
-//private fun getWeatherDataRetrofit(city: String) {
-//    val weatherService: WeatherService = WeatherService()
-//    CoroutineScope(Dispatchers.IO).launch {
-//        val forecastWeather: com.example.weathercompose.model.weather.Weather? =
-//            weatherService.getForecastWeather(city)
-//        val activityWeather = forecastWeather?.current?.let {
-//            Weather(
-//                city,
-//                it.last_updated,
-//                forecastWeather.current.temp_c.toString(),
-//                forecastWeather.current.condition.text,
-//                forecastWeather.current.condition.icon,
-//                forecastWeather.forecast.forecastday[0].day.maxtemp_c.toString(),
-//                forecastWeather.forecast.forecastday[0].day.mintemp_c.toString(),
-//                ""
-//            )
-//        }
-//    }
-//}
